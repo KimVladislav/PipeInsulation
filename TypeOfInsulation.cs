@@ -11,7 +11,7 @@ using Autodesk.Revit.DB.Plumbing;
 
 namespace TypeOfPipeInsulatuion
 {
-    class TypeOfInsulation
+    class TypeOfInsulation 
     {
         public Dictionary<int, List<PipeInsulation>> InstanceGroups { get; private set; }
         public List<int> Diameters { get; }
@@ -23,30 +23,36 @@ namespace TypeOfPipeInsulatuion
             Diameters = new List<int>();
             RevitType = revitType;
         }
-        public Dictionary<int, List<PipeInsulation>> GroupInstanceByHostDiameter (FilteredElementCollector allInsulations)
+        public Dictionary<int, List<PipeInsulation>> GroupInstanceByHostDiameter(FilteredElementCollector allInsulations)
         {
-            
-            List<PipeInsulation> list = allInsulations.Where(x => RevitType.Document.GetElement(x.h x.GetTypeId() == RevitType.Id).Cast<PipeInsulation>().ToList();
+            List<PipeInsulation> list = new List<PipeInsulation>();
+            foreach( PipeInsulation insulation in allInsulations)
+            {
+                if (insulation.GetTypeId() == RevitType.Id)
+                {
+                    if (!(RevitType.Document.GetElement(insulation.HostElementId) is Pipe))                      
+                        continue;                       
+                    list.Add(insulation);
+                    
+                }
+            }
+           
+            Dictionary<int, List<PipeInsulation>> InstanceGroups = new Dictionary<int, List<PipeInsulation>>();
             InstanceGroups = list.GroupBy(x =>
             {
-                Element host = RevitType.Document.GetElement(x.HostElementId);
-
-                if (!(host is Pipe))
-                    return;
-
-                Pipe hostPipe =  as Pipe;
-
+                Pipe hostPipe = RevitType.Document.GetElement(x.HostElementId) as Pipe;
                 var diameterInFeet = hostPipe.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble();
                 var diameterInMM = diameterInFeet * 304.8;
-                int diameter = (int)System.Math.Round(diameterInMM);
+                int diameter = (int)Math.Round(diameterInMM);
                 return diameter;
             }
             ).ToDictionary(x => x.Key, y => y.ToList());
 
             return InstanceGroups;
         }
+    }
         
 
         
-    }
 }
+
