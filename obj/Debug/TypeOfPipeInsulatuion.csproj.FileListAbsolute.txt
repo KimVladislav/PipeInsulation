@@ -1,0 +1,6 @@
+C:\Users\MMSI\source\repos\TypeOfPipeInsulatuion\TypeOfPipeInsulatuion\bin\Debug\TypeOfPipeInsulatuion.dll
+C:\Users\MMSI\source\repos\TypeOfPipeInsulatuion\TypeOfPipeInsulatuion\bin\Debug\TypeOfPipeInsulatuion.pdb
+C:\Users\MMSI\source\repos\TypeOfPipeInsulatuion\TypeOfPipeInsulatuion\obj\Debug\TypeOfPipeInsulatuion.Form1.resources
+C:\Users\MMSI\source\repos\TypeOfPipeInsulatuion\TypeOfPipeInsulatuion\obj\Debug\TypeOfPipeInsulatuion.csproj.GenerateResource.cache
+C:\Users\MMSI\source\repos\TypeOfPipeInsulatuion\TypeOfPipeInsulatuion\obj\Debug\TypeOfPipeInsulatuion.dll
+C:\Users\MMSI\source\repos\TypeOfPipeInsulatuion\TypeOfPipeInsulatuion\obj\Debug\TypeOfPipeInsulatuion.pdb
