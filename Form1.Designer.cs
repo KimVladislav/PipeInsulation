@@ -53,6 +53,7 @@
             this.DiametersGridView.Size = new System.Drawing.Size(163, 145);
             this.DiametersGridView.TabIndex = 0;
             this.DiametersGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DiametersGridView_CellContentClick);
+            this.DiametersGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.DiametersGridView_CellEndEdit);
             // 
             // OuterDiameterColumn
             // 
@@ -71,7 +72,8 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(152, 173);
+            this.button1.Location = new System.Drawing.Point(152, 174);
+            this.button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 2;
@@ -100,17 +102,19 @@
             // TypesOfInsulationChekedBox
             // 
             this.TypesOfInsulationChekedBox.FormattingEnabled = true;
-            this.TypesOfInsulationChekedBox.Location = new System.Drawing.Point(12, 24);
+            this.TypesOfInsulationChekedBox.Location = new System.Drawing.Point(12, 25);
+            this.TypesOfInsulationChekedBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TypesOfInsulationChekedBox.Name = "TypesOfInsulationChekedBox";
-            this.TypesOfInsulationChekedBox.Size = new System.Drawing.Size(164, 140);
+            this.TypesOfInsulationChekedBox.Size = new System.Drawing.Size(164, 123);
             this.TypesOfInsulationChekedBox.TabIndex = 5;
             this.TypesOfInsulationChekedBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.TypesOfInsulationChekedBox_ItemCheck);
+            this.TypesOfInsulationChekedBox.SelectedIndexChanged += new System.EventHandler(this.TypesOfInsulationChekedBox_SelectedIndexChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(382, 208);
+            this.ClientSize = new System.Drawing.Size(381, 208);
             this.Controls.Add(this.TypesOfInsulationChekedBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);

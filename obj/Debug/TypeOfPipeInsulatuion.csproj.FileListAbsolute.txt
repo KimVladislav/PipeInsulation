@@ -4,3 +4,9 @@ C:\Users\MMSI\source\repos\TypeOfPipeInsulatuion\TypeOfPipeInsulatuion\obj\Debug
 C:\Users\MMSI\source\repos\TypeOfPipeInsulatuion\TypeOfPipeInsulatuion\obj\Debug\TypeOfPipeInsulatuion.csproj.GenerateResource.cache
 C:\Users\MMSI\source\repos\TypeOfPipeInsulatuion\TypeOfPipeInsulatuion\obj\Debug\TypeOfPipeInsulatuion.dll
 C:\Users\MMSI\source\repos\TypeOfPipeInsulatuion\TypeOfPipeInsulatuion\obj\Debug\TypeOfPipeInsulatuion.pdb
+C:\Users\MMSI\source\repos\zubanidze\PipeInsulation\obj\Debug\TypeOfPipeInsulatuion.Form1.resources
+C:\Users\MMSI\source\repos\zubanidze\PipeInsulation\obj\Debug\TypeOfPipeInsulatuion.csproj.GenerateResource.cache
+C:\Users\MMSI\source\repos\zubanidze\PipeInsulation\obj\Debug\TypeOfPipeInsulatuion.dll
+C:\Users\MMSI\source\repos\zubanidze\PipeInsulation\obj\Debug\TypeOfPipeInsulatuion.pdb
+C:\Users\MMSI\source\repos\zubanidze\PipeInsulation\bin\Debug\TypeOfPipeInsulatuion.dll
+C:\Users\MMSI\source\repos\zubanidze\PipeInsulation\bin\Debug\TypeOfPipeInsulatuion.pdb

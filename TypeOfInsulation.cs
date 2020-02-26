@@ -11,7 +11,7 @@ using Autodesk.Revit.DB.Plumbing;
 
 namespace TypeOfPipeInsulatuion
 {
-    class TypeOfInsulation 
+    public class TypeOfInsulation 
     {
         public Dictionary<int, List<PipeInsulation>> InstanceGroups { get; private set; }
         public List<int> Diameters { get; }
