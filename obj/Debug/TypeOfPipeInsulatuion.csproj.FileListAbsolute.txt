@@ -10,3 +10,4 @@ C:\Users\MMSI\source\repos\zubanidze\PipeInsulation\obj\Debug\TypeOfPipeInsulatu
 C:\Users\MMSI\source\repos\zubanidze\PipeInsulation\obj\Debug\TypeOfPipeInsulatuion.pdb
 C:\Users\MMSI\source\repos\zubanidze\PipeInsulation\bin\Debug\TypeOfPipeInsulatuion.dll
 C:\Users\MMSI\source\repos\zubanidze\PipeInsulation\bin\Debug\TypeOfPipeInsulatuion.pdb
+C:\Users\MMSI\source\repos\zubanidze\PipeInsulation\obj\Debug\TypeOfPipeInsulatuion.csprojAssemblyReference.cache

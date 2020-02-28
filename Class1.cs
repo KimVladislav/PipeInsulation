@@ -8,6 +8,7 @@ using Autodesk.Revit.UI.Selection;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB.Plumbing;
+using System.Xml;
 
 namespace TypeOfPipeInsulatuion
 {
@@ -28,29 +29,43 @@ namespace TypeOfPipeInsulatuion
             UIDocument uiDoc = uiApp.ActiveUIDocument;
             Document doc = uiApp.ActiveUIDocument.Document;
             Form1 ui = new Form1();
-            ui.uiDoc = uiDoc;
-            ui.Show();
-           
+            ui.uiDoc = uiDoc;            
 
-            FilteredElementCollector pipeInsulations = new FilteredElementCollector(doc).OfClass(typeof(PipeInsulation));
-           
+            FilteredElementCollector pipeInsulations = new FilteredElementCollector(doc).OfClass(typeof(PipeInsulation));         
             FilteredElementCollector typesOfInsulations = new FilteredElementCollector(doc).OfClass(typeof(PipeInsulationType));
+            FilteredElementCollector pipes = new FilteredElementCollector(doc).OfClass(typeof(Pipe));
+            if (pipes.Count() == 0)
+            {
+                System.Windows.Forms.MessageBox.Show("В данном проекте нет труб");
+                return Result.Cancelled;
+            }
+            Pipe pipe = pipes.FirstOrDefault() as Pipe;
+            Parameter param = (pipe as Element).LookupParameter("Изоляция_Диаметр");
+            if (null == param)
+            {
+                System.Windows.Forms.MessageBox.Show("В данном проекте нет параметра \"Изоляция_Диаметр\"");
+                return Result.Cancelled;
+            }
             List<TypeOfInsulation> customList = new List<TypeOfInsulation>();
-
             
-        List<int> diametres = new List<int>();
             foreach (PipeInsulationType type in typesOfInsulations)
             {
-                TypeOfInsulation customType = new TypeOfInsulation(type);                
-                var dict = customType.GroupInstanceByHostDiameter(pipeInsulations);
-                string msg = string.Join(" ", dict.Keys.ToArray());
-                System.Windows.Forms.MessageBox.Show(type.Name + "\n" + msg);
-                System.Windows.Forms.MessageBox.Show(customType.Diameters.Count().ToString());
-                customList.Add(customType);               
+                 TypeOfInsulation customType = new TypeOfInsulation(type);
+                 var dict = customType.GroupInstanceByHostDiameter(pipeInsulations);
+                 customList.Add(customType);
             }
 
-            ui.TypesOfInsulationChekedBox.Items.AddRange(customList.ConvertAll(x=>x.RevitType.Name).ToArray());
-            
+            ui.FormCustomList = customList;            
+            ui.TypesOfInsulationCheckedListBox.Items.AddRange(customList.ConvertAll(x => x.RevitType.Name).ToArray());
+            var uiResult = ui.ShowDialog();
+
+            if (uiResult != System.Windows.Forms.DialogResult.OK)
+                return Result.Cancelled;
+
+            foreach (int checkedIndex in ui.TypesOfInsulationCheckedListBox.CheckedIndices)
+            {
+                //customList[checkedIndex]
+            }
 
             return Result.Succeeded;
         }

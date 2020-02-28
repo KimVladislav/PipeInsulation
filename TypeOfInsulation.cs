@@ -14,13 +14,12 @@ namespace TypeOfPipeInsulatuion
     public class TypeOfInsulation 
     {
         public Dictionary<int, List<PipeInsulation>> InstanceGroups { get; private set; }
-        public List<int> Diameters { get; }
+        public int[] Diameters { get; private set; }
         public PipeInsulationType RevitType { get; }
 
         public TypeOfInsulation(PipeInsulationType revitType)
         {
             InstanceGroups = new Dictionary<int, List<PipeInsulation>>();
-            Diameters = new List<int>();
             RevitType = revitType;
         }
         public Dictionary<int, List<PipeInsulation>> GroupInstanceByHostDiameter(FilteredElementCollector allInsulations)
@@ -32,13 +31,12 @@ namespace TypeOfPipeInsulatuion
                 {
                     if (!(RevitType.Document.GetElement(insulation.HostElementId) is Pipe))                      
                         continue;                       
-                    list.Add(insulation);
-                    
+                    list.Add(insulation);                    
                 }
             }
            
-            Dictionary<int, List<PipeInsulation>> InstanceGroups = new Dictionary<int, List<PipeInsulation>>();
-            InstanceGroups = list.GroupBy(x =>
+            Dictionary<int, List<PipeInsulation>> instanceGroups = new Dictionary<int, List<PipeInsulation>>();
+            instanceGroups = list.GroupBy(x =>
             {
                 Pipe hostPipe = RevitType.Document.GetElement(x.HostElementId) as Pipe;
                 var diameterInFeet = hostPipe.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble();
@@ -48,8 +46,13 @@ namespace TypeOfPipeInsulatuion
             }
             ).ToDictionary(x => x.Key, y => y.ToList());
 
+            InstanceGroups = instanceGroups;
+
+            Diameters = new int[InstanceGroups.Count];
+
             return InstanceGroups;
         }
+       
     }
         
 

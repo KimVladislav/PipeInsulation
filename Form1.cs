@@ -14,7 +14,7 @@ namespace TypeOfPipeInsulatuion
 
     public partial class Form1 : System.Windows.Forms.Form
     {
-        public List<TypeOfInsulation> customList { get; set; }
+        public List<TypeOfInsulation> FormCustomList { get; set; }
         
     
         public Autodesk.Revit.UI.UIDocument uiDoc { get; set; }
@@ -43,36 +43,58 @@ namespace TypeOfPipeInsulatuion
         private void button1_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
+
+            Close();
         }
 
-        private void TypesOfInsulationChekedBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void TypesOfInsulationCheckedListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            DiametersGridView.Rows.Clear();
+
+            if (TypesOfInsulationCheckedListBox.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            var selectedType = FormCustomList[TypesOfInsulationCheckedListBox.SelectedIndex];
+
+            foreach (var pair in selectedType.InstanceGroups)
+            {
+                DiametersGridView.Rows.Add(pair.Key, string.Empty);
+            }
+        }
+
+        private void DiametersGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (FormCustomList == null)
+            {
+                return;
+            }
             
-            if (TypesOfInsulationChekedBox.SelectedIndex == 0)
-            {
-                DiametersGridView.Rows.Add(customList[0].Diameters.Count());
-                for (int i = 0; i <=customList[0].Diameters.Count(); i++)
-                    DiametersGridView[0,customList[0].Diameters.Count()].Value = customList[0].Diameters[i];
-            }
-            if (TypesOfInsulationChekedBox.SelectedIndex == 1)
-            {
-                DiametersGridView.Rows.Add(customList[1].Diameters.Count());
-                for (int i = 0; i <= customList[1].Diameters.Count(); i++)
-                    DiametersGridView[0, customList[1].Diameters.Count()].Value = customList[1].Diameters[i];
-            }
-            if (TypesOfInsulationChekedBox.SelectedIndex == 2)
-            {
-                DiametersGridView.Rows.Add(customList[2].Diameters.Count());
-                for (int i = 0; i <= customList[2].Diameters.Count(); i++)
-                    DiametersGridView[0, customList[2].Diameters.Count()].Value = customList[2].Diameters[i];
-            }
-
+            var customTypeOfInsulation = FormCustomList[TypesOfInsulationCheckedListBox.SelectedIndex];            
+            customTypeOfInsulation.Diameters[e.RowIndex] = int.Parse(DiametersGridView[e.ColumnIndex, e.RowIndex].Value.ToString());
         }
 
-        private void DiametersGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+       
+
+        private void DiametersGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            if ((DiametersGridView.CurrentCell.GetType() != typeof(int)) || ((int)DiametersGridView.CurrentCell.Value <= 0))
-                MessageBox.Show("Вводимое значение должно быть положительным числом");
+            e.Control.KeyPress -= new KeyPressEventHandler(UserInsulationDiameter_KeyPress);
+            if (DiametersGridView.CurrentCell.ColumnIndex == 1) 
+            {
+                TextBox tb = e.Control as TextBox;
+                if (tb != null)
+                {
+                    tb.KeyPress += new KeyPressEventHandler(UserInsulationDiameter_KeyPress);
+                }
+            }
+        }
+        private void UserInsulationDiameter_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
         }
     }
     

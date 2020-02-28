@@ -34,12 +34,15 @@
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.TypesOfInsulationChekedBox = new System.Windows.Forms.CheckedListBox();
+            this.TypesOfInsulationCheckedListBox = new System.Windows.Forms.CheckedListBox();
             ((System.ComponentModel.ISupportInitialize)(this.DiametersGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // DiametersGridView
             // 
+            this.DiametersGridView.AllowUserToAddRows = false;
+            this.DiametersGridView.AllowUserToDeleteRows = false;
+            this.DiametersGridView.AllowUserToResizeRows = false;
             this.DiametersGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DiametersGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.OuterDiameterColumn,
@@ -53,7 +56,9 @@
             this.DiametersGridView.Size = new System.Drawing.Size(163, 145);
             this.DiametersGridView.TabIndex = 0;
             this.DiametersGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DiametersGridView_CellContentClick);
-            this.DiametersGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.DiametersGridView_CellEndEdit);
+            
+            this.DiametersGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DiametersGridView_CellValueChanged);
+            this.DiametersGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.DiametersGridView_EditingControlShowing);
             // 
             // OuterDiameterColumn
             // 
@@ -99,23 +104,23 @@
             this.label2.TabIndex = 4;
             this.label2.Text = "Соотношения диаметров";
             // 
-            // TypesOfInsulationChekedBox
+            // TypesOfInsulationCheckedListBox
             // 
-            this.TypesOfInsulationChekedBox.FormattingEnabled = true;
-            this.TypesOfInsulationChekedBox.Location = new System.Drawing.Point(12, 25);
-            this.TypesOfInsulationChekedBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TypesOfInsulationChekedBox.Name = "TypesOfInsulationChekedBox";
-            this.TypesOfInsulationChekedBox.Size = new System.Drawing.Size(164, 123);
-            this.TypesOfInsulationChekedBox.TabIndex = 5;
-            this.TypesOfInsulationChekedBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.TypesOfInsulationChekedBox_ItemCheck);
-            this.TypesOfInsulationChekedBox.SelectedIndexChanged += new System.EventHandler(this.TypesOfInsulationChekedBox_SelectedIndexChanged);
+            this.TypesOfInsulationCheckedListBox.FormattingEnabled = true;
+            this.TypesOfInsulationCheckedListBox.Location = new System.Drawing.Point(12, 25);
+            this.TypesOfInsulationCheckedListBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TypesOfInsulationCheckedListBox.Name = "TypesOfInsulationCheckedListBox";
+            this.TypesOfInsulationCheckedListBox.Size = new System.Drawing.Size(164, 123);
+            this.TypesOfInsulationCheckedListBox.TabIndex = 5;
+            this.TypesOfInsulationCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.TypesOfInsulationChekedBox_ItemCheck);
+            this.TypesOfInsulationCheckedListBox.SelectedIndexChanged += new System.EventHandler(this.TypesOfInsulationCheckedListBox_SelectedIndexChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(381, 208);
-            this.Controls.Add(this.TypesOfInsulationChekedBox);
+            this.Controls.Add(this.TypesOfInsulationCheckedListBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
@@ -136,7 +141,7 @@
         public System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        public System.Windows.Forms.CheckedListBox TypesOfInsulationChekedBox;
+        public System.Windows.Forms.CheckedListBox TypesOfInsulationCheckedListBox;
         public System.Windows.Forms.DataGridViewTextBoxColumn OuterDiameterColumn;
         public System.Windows.Forms.DataGridViewTextBoxColumn UserInsulationDiameter;
     }
