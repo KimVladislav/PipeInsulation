@@ -9,6 +9,7 @@ using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB.Plumbing;
 using System.Xml;
+using System.Windows.Forms;
 
 namespace TypeOfPipeInsulatuion
 {
@@ -61,12 +62,28 @@ namespace TypeOfPipeInsulatuion
 
             if (uiResult != System.Windows.Forms.DialogResult.OK)
                 return Result.Cancelled;
-
+            Transaction tr = new Transaction(doc, "Диаметр изоляции");
+            tr.Start();
             foreach (int checkedIndex in ui.TypesOfInsulationCheckedListBox.CheckedIndices)
             {
-                //customList[checkedIndex]
+                TypeOfInsulation type = customList[checkedIndex];
+                
+                foreach(int diameter in type.Diameters)               
+                {                                      
+                    if (diameter != 0)
+                    {
+                        foreach (var pipeInslationList in type.InstanceGroups.Values)
+                        {
+                            foreach ( var pipeInsulation in pipeInslationList)
+                            {
+                                Pipe p = customList[checkedIndex].RevitType.Document.GetElement(pipeInsulation.HostElementId) as Pipe;
+                                p.LookupParameter("Изоляция_Диаметр").Set(diameter.ToString());
+                            }
+                        }
+                    }                    
+                }
             }
-
+            tr.Commit();
             return Result.Succeeded;
         }
     }

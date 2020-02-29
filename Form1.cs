@@ -62,6 +62,12 @@ namespace TypeOfPipeInsulatuion
             {
                 DiametersGridView.Rows.Add(pair.Key, string.Empty);
             }
+            
+             for(int i = 0; i< selectedType.Diameters.Length;i++)
+            {
+                if (selectedType.Diameters[i] != 0)
+                    DiametersGridView[1, i].Value = selectedType.Diameters[i];
+            }
         }
 
         private void DiametersGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -73,6 +79,7 @@ namespace TypeOfPipeInsulatuion
             
             var customTypeOfInsulation = FormCustomList[TypesOfInsulationCheckedListBox.SelectedIndex];            
             customTypeOfInsulation.Diameters[e.RowIndex] = int.Parse(DiametersGridView[e.ColumnIndex, e.RowIndex].Value.ToString());
+
         }
 
        
