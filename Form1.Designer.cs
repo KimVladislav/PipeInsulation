@@ -29,12 +29,14 @@
         private void InitializeComponent()
         {
             this.DiametersGridView = new System.Windows.Forms.DataGridView();
+            this.OuterDiameterColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.UserInsulationDiameter = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.TypesOfInsulationCheckedListBox = new System.Windows.Forms.CheckedListBox();
-            this.OuterDiameterColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.UserInsulationDiameter = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.DiametersGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -47,22 +49,37 @@
             this.DiametersGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.OuterDiameterColumn,
             this.UserInsulationDiameter});
-            this.DiametersGridView.Location = new System.Drawing.Point(227, 20);
-            this.DiametersGridView.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.DiametersGridView.Location = new System.Drawing.Point(199, 20);
+            this.DiametersGridView.Margin = new System.Windows.Forms.Padding(2);
             this.DiametersGridView.Name = "DiametersGridView";
             this.DiametersGridView.RowHeadersVisible = false;
             this.DiametersGridView.RowHeadersWidth = 51;
             this.DiametersGridView.RowTemplate.Height = 24;
-            this.DiametersGridView.Size = new System.Drawing.Size(146, 154);
+            this.DiametersGridView.Size = new System.Drawing.Size(174, 154);
             this.DiametersGridView.TabIndex = 0;
             this.DiametersGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DiametersGridView_CellContentClick);
             this.DiametersGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DiametersGridView_CellValueChanged);
             this.DiametersGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.DiametersGridView_EditingControlShowing);
             // 
+            // OuterDiameterColumn
+            // 
+            this.OuterDiameterColumn.HeaderText = "Внешний";
+            this.OuterDiameterColumn.MinimumWidth = 6;
+            this.OuterDiameterColumn.Name = "OuterDiameterColumn";
+            this.OuterDiameterColumn.ReadOnly = true;
+            this.OuterDiameterColumn.Width = 87;
+            // 
+            // UserInsulationDiameter
+            // 
+            this.UserInsulationDiameter.HeaderText = "Изоляции";
+            this.UserInsulationDiameter.MinimumWidth = 6;
+            this.UserInsulationDiameter.Name = "UserInsulationDiameter";
+            this.UserInsulationDiameter.Width = 87;
+            // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(143, 178);
-            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button1.Location = new System.Drawing.Point(280, 179);
+            this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(93, 27);
             this.button1.TabIndex = 2;
@@ -94,27 +111,32 @@
             // 
             this.TypesOfInsulationCheckedListBox.FormattingEnabled = true;
             this.TypesOfInsulationCheckedListBox.Location = new System.Drawing.Point(9, 20);
-            this.TypesOfInsulationCheckedListBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.TypesOfInsulationCheckedListBox.Margin = new System.Windows.Forms.Padding(2);
             this.TypesOfInsulationCheckedListBox.Name = "TypesOfInsulationCheckedListBox";
-            this.TypesOfInsulationCheckedListBox.Size = new System.Drawing.Size(146, 154);
+            this.TypesOfInsulationCheckedListBox.Size = new System.Drawing.Size(174, 154);
             this.TypesOfInsulationCheckedListBox.TabIndex = 5;
             this.TypesOfInsulationCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.TypesOfInsulationChekedBox_ItemCheck);
             this.TypesOfInsulationCheckedListBox.SelectedIndexChanged += new System.EventHandler(this.TypesOfInsulationCheckedListBox_SelectedIndexChanged);
             // 
-            // OuterDiameterColumn
+            // button2
             // 
-            this.OuterDiameterColumn.HeaderText = "Внешний";
-            this.OuterDiameterColumn.MinimumWidth = 6;
-            this.OuterDiameterColumn.Name = "OuterDiameterColumn";
-            this.OuterDiameterColumn.ReadOnly = true;
-            this.OuterDiameterColumn.Width = 74;
+            this.button2.Location = new System.Drawing.Point(9, 179);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(82, 26);
+            this.button2.TabIndex = 6;
+            this.button2.Text = "Сохранить";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // UserInsulationDiameter
+            // button3
             // 
-            this.UserInsulationDiameter.HeaderText = "Изоляции";
-            this.UserInsulationDiameter.MinimumWidth = 6;
-            this.UserInsulationDiameter.Name = "UserInsulationDiameter";
-            this.UserInsulationDiameter.Width = 74;
+            this.button3.Location = new System.Drawing.Point(94, 179);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(89, 27);
+            this.button3.TabIndex = 7;
+            this.button3.Text = "Загрузить";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // Form1
             // 
@@ -122,13 +144,15 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(384, 216);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.TypesOfInsulationCheckedListBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.DiametersGridView);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Надстройка соотношения диаметров";
@@ -148,5 +172,7 @@
         public System.Windows.Forms.CheckedListBox TypesOfInsulationCheckedListBox;
         private System.Windows.Forms.DataGridViewTextBoxColumn OuterDiameterColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn UserInsulationDiameter;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
     }
 }

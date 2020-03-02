@@ -42,11 +42,11 @@ namespace TypeOfPipeInsulatuion
             }
             Pipe pipe = pipes.FirstOrDefault() as Pipe;
             Parameter param = (pipe as Element).LookupParameter("Изоляция_Диаметр");
-            if (null == param)
-            {
-                System.Windows.Forms.MessageBox.Show("В данном проекте нет параметра \"Изоляция_Диаметр\"");
-                return Result.Cancelled;
-            }
+            ////if (null == param)
+            //{
+            //   // System.Windows.Forms.MessageBox.Show("В данном проекте нет параметра \"Изоляция_Диаметр\"");
+            //   // return Result.Cancelled;
+            //}
             List<TypeOfInsulation> customList = new List<TypeOfInsulation>();
             
             foreach (PipeInsulationType type in typesOfInsulations)
