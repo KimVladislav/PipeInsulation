@@ -132,7 +132,7 @@ namespace TypeOfPipeInsulatuion
                     {
                         var inputedDiameter = selectedType.Diameters[i].ToString();
                         var revitDiameter = selectedType.InstanceGroups.Keys.ToList()[i]; 
-                        if (inputedDiameter.Length == 0)
+                        if (int.Parse(inputedDiameter)== 0)
                             continue;
                         XElement pairOfElements = new XElement("PairOfDiameters");
                         var input = new XElement("InputedDiameter");
