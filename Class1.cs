@@ -30,61 +30,85 @@ namespace TypeOfPipeInsulatuion
             UIDocument uiDoc = uiApp.ActiveUIDocument;
             Document doc = uiApp.ActiveUIDocument.Document;
             Form1 ui = new Form1();
-            ui.uiDoc = uiDoc;            
+            ui.uiDoc = uiDoc;
 
-            FilteredElementCollector pipeInsulations = new FilteredElementCollector(doc).OfClass(typeof(PipeInsulation));         
-            FilteredElementCollector typesOfInsulations = new FilteredElementCollector(doc).OfClass(typeof(PipeInsulationType));
-            FilteredElementCollector pipes = new FilteredElementCollector(doc).OfClass(typeof(Pipe));
-            if (pipes.Count() == 0)
+            try
             {
-                System.Windows.Forms.MessageBox.Show("В данном проекте нет труб");
-                return Result.Cancelled;
-            }
-            Pipe pipe = pipes.FirstOrDefault() as Pipe;
-            Parameter param = (pipe as Element).LookupParameter("Изоляция_Диаметр");
-            ////if (null == param)
-            //{
-            //   // System.Windows.Forms.MessageBox.Show("В данном проекте нет параметра \"Изоляция_Диаметр\"");
-            //   // return Result.Cancelled;
-            //}
-            List<TypeOfInsulation> customList = new List<TypeOfInsulation>();
-            
-            foreach (PipeInsulationType type in typesOfInsulations)
-            {
-                 TypeOfInsulation customType = new TypeOfInsulation(type);
-                 var dict = customType.GroupInstanceByHostDiameter(pipeInsulations);
-                 customList.Add(customType);
-            }
 
-            ui.FormCustomList = customList;            
-            ui.TypesOfInsulationCheckedListBox.Items.AddRange(customList.ConvertAll(x => x.RevitType.Name).ToArray());
-            var uiResult = ui.ShowDialog();
+                FilteredElementCollector pipeInsulations = new FilteredElementCollector(doc).OfClass(typeof(PipeInsulation));
+                FilteredElementCollector typesOfInsulations = new FilteredElementCollector(doc).OfClass(typeof(PipeInsulationType));
+                FilteredElementCollector pipes = new FilteredElementCollector(doc).OfClass(typeof(Pipe));
+                FilteredElementCollector insulationCollector = new FilteredElementCollector(doc).OfClass(typeof(PipeInsulation));
 
-            if (uiResult != System.Windows.Forms.DialogResult.OK)
-                return Result.Cancelled;
-            Transaction tr = new Transaction(doc, "Диаметр изоляции");
-            tr.Start();
-            foreach (int checkedIndex in ui.TypesOfInsulationCheckedListBox.CheckedIndices)
-            {
-                TypeOfInsulation type = customList[checkedIndex];
+                if (insulationCollector.Count() == 0)
+                {
+                    MessageBox.Show("В данном проекте нет изоляции труб");
+                    return Result.Cancelled;
+                }
+
+                if (pipes.Count() == 0)
+                {
+                    MessageBox.Show("В данном проекте нет труб");
+                    return Result.Cancelled;
+                }
                 
-                foreach(int diameter in type.Diameters)               
-                {                                      
-                    if (diameter != 0)
+                Element ins = insulationCollector.FirstOrDefault();
+                Parameter param = ins.LookupParameter("Изоляция_Диаметр");
+                if (null == param)
+                {
+                    MessageBox.Show("В данном проекте нет параметра \"Изоляция_Диаметр\"");
+                    return Result.Cancelled;
+                }
+                List<TypeOfInsulation> customList = new List<TypeOfInsulation>();
+
+                foreach (PipeInsulationType type in typesOfInsulations)
+                {
+                    TypeOfInsulation customType = new TypeOfInsulation(type);
+                    var dict = customType.GroupInstanceByHostDiameter(pipeInsulations);
+                    customList.Add(customType);
+                }
+
+                ui.FormCustomList = customList;
+                ui.TypesOfInsulationCheckedListBox.Items.AddRange(customList.ConvertAll(x => x.RevitType.Name).ToArray());
+                var uiResult = ui.ShowDialog();
+
+                if (uiResult != DialogResult.OK)
+                    return Result.Cancelled;
+                Transaction tr = new Transaction(doc, "Диаметр изоляции");
+                tr.Start();
+                foreach (int checkedIndex in ui.TypesOfInsulationCheckedListBox.CheckedIndices)
+                {
+                    TypeOfInsulation type = customList[checkedIndex];
+
+                    foreach (int diameter in type.Diameters)
                     {
-                        foreach (var pipeInslationList in type.InstanceGroups.Values)
+                        if (diameter != 0)
                         {
-                            foreach ( var pipeInsulation in pipeInslationList)
+                            foreach (var pipeInslationList in type.InstanceGroups.Values)
                             {
-                                Pipe p = customList[checkedIndex].RevitType.Document.GetElement(pipeInsulation.HostElementId) as Pipe;
-                                p.LookupParameter("Изоляция_Диаметр").Set(diameter.ToString());
+                                foreach (var pipeInsulation in pipeInslationList)
+                                {
+                                    double diameterInFeet = diameter / 304.8;
+                                    pipeInsulation.LookupParameter("Изоляция_Диаметр").Set(diameterInFeet);
+                                }
                             }
                         }
-                    }                    
+                    }
                 }
+                tr.Commit();
+                MessageBox.Show("Данные параметра диаметра изоляции успешно обновлены");
+                return Result.Succeeded;
+
+                
+                
             }
-            tr.Commit();
-            return Result.Succeeded;
+
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message + "\n\n" + ex.StackTrace);
+
+                return Result.Failed;
+            }
         }
     }
 }

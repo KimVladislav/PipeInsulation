@@ -80,7 +80,7 @@ namespace TypeOfPipeInsulatuion
                 return;
             }
 
-            var customTypeOfInsulation = FormCustomList[TypesOfInsulationCheckedListBox.SelectedIndex];
+            var customTypeOfInsulation = FormCustomList[TypesOfInsulationCheckedListBox.SelectedIndex];           
             customTypeOfInsulation.Diameters[e.RowIndex] = int.Parse(DiametersGridView[e.ColumnIndex, e.RowIndex].Value.ToString());
 
         }
@@ -110,7 +110,7 @@ namespace TypeOfPipeInsulatuion
         private void button2_Click(object sender, EventArgs e)
         {
 
-            
+
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
             saveFileDialog1.Filter = "xml файлы (*.xml)|*.xml|All files (*.*)|*.*";
@@ -120,19 +120,19 @@ namespace TypeOfPipeInsulatuion
             {
                 XDocument xDoc = new XDocument();
                 var allTypes = new XElement("AllTypes");
-                
+
                 foreach (int checkedIndex in TypesOfInsulationCheckedListBox.CheckedIndices)
                 {
                     var selectedType = FormCustomList[checkedIndex];
                     var name = selectedType.RevitType.Name;
                     var typeNode = new XElement("Type");
-                    XAttribute typeName = new  XAttribute("TypeName", name);
+                    XAttribute typeName = new XAttribute("TypeName", name);
                     typeNode.Add(typeName);
                     for (int i = 0; i < selectedType.Diameters.Length; i++)
                     {
                         var inputedDiameter = selectedType.Diameters[i].ToString();
-                        var revitDiameter = selectedType.InstanceGroups.Keys.ToList()[i]; 
-                        if (int.Parse(inputedDiameter)== 0)
+                        var revitDiameter = selectedType.InstanceGroups.Keys.ToList()[i];
+                        if (int.Parse(inputedDiameter) == 0)
                             continue;
                         XElement pairOfElements = new XElement("PairOfDiameters");
                         var input = new XElement("InputedDiameter");
@@ -150,12 +150,23 @@ namespace TypeOfPipeInsulatuion
             }
         }
 
+        private void UpdateGridView(TypeOfInsulation selectedType)
+        {
+         
+            foreach (var pair in selectedType.InstanceGroups)
+            {                
+                 DiametersGridView.Rows.Add(pair.Key, string.Empty);
+            }
+
+            for (int i = 0; i < selectedType.Diameters.Length; i++)
+            {
+                if (selectedType.Diameters[i] != 0)
+                    DiametersGridView[1, i].Value = selectedType.Diameters[i];
+            }
+        }
+
         private void button3_Click(object sender, EventArgs e)
         {
-            TypesOfInsulationCheckedListBox.Items.Clear();
-            DiametersGridView.Rows.Clear();
-            
-            
             var filePath = string.Empty;
 
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -164,32 +175,35 @@ namespace TypeOfPipeInsulatuion
                 openFileDialog.Filter = "xml файлы (*.xml)|*.xml|All files (*.*)|*.*";
                 openFileDialog.FilterIndex = 1;
                 openFileDialog.RestoreDirectory = true;
-
+               
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     filePath = openFileDialog.FileName;
-
-                    XDocument xDoc = XDocument.Load(filePath);
-                    foreach(XElement elem in xDoc.Descendants("AllTypes"))
+                    DiametersGridView.Rows.Clear();
+                    XDocument xDoc = XDocument.Load(filePath); 
+                    XElement allTypesNode = xDoc.Element("AllTypes");
+                    int typecounter = -1;
+                    foreach (XElement typeNode in allTypesNode.Descendants("Type"))
                     {
-                        foreach (XElement nameType in xDoc.Descendants("Type"))
-                        {
-                            TypesOfInsulationCheckedListBox.Items.Add(nameType.Attribute("TypeName").Value);
-                            //попробовать положить прямо в кастомный класс
-                            foreach(XElement pair in xDoc.Descendants("PairOfDiameters"))
-                            {
-                                
-                                DiametersGridView.Rows.Add(pair.Element("RevitDiameter").Value);
-                                //пока что не выводит пользовательские диаметры
-                                //не до конца корректно обрабатывает загрузку несколькиъ типов изоляции
-                            }
-                        }
+                        typecounter++;
+                        foreach (XElement pairNode in typeNode.Descendants("PairOfDiameters"))
+                        {                           
+                                int paircounter = -1;
+                                foreach (var pair in FormCustomList[typecounter].InstanceGroups)
+                                {  
+                                    paircounter++;
+                                    if (pair.Key == int.Parse(pairNode.Element("RevitDiameter").Value))
+                                    {                                             
+                                         FormCustomList[typecounter].Diameters[paircounter] = int.Parse(pairNode.Element("InputedDiameter").Value);           
+                                    }
+                                    UpdateGridView(FormCustomList[typecounter]);
+                                }                                                         
+                        }      
                     }
-
-                    
                 }
             }
         }
     }
 }
+
     
