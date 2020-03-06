@@ -96,6 +96,7 @@ namespace TypeOfPipeInsulatuion
                     }
                 }
                 tr.Commit();
+                MessageBox.Show(customList[2].Diameters[1].ToString());
                 MessageBox.Show("Данные параметра диаметра изоляции успешно обновлены");
                 return Result.Succeeded;
 

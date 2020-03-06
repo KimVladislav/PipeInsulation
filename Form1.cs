@@ -80,8 +80,9 @@ namespace TypeOfPipeInsulatuion
                 return;
             }
 
-            var customTypeOfInsulation = FormCustomList[TypesOfInsulationCheckedListBox.SelectedIndex];           
-            customTypeOfInsulation.Diameters[e.RowIndex] = int.Parse(DiametersGridView[e.ColumnIndex, e.RowIndex].Value.ToString());
+            var customTypeOfInsulation = FormCustomList[TypesOfInsulationCheckedListBox.SelectedIndex]; 
+            if((customTypeOfInsulation.Diameters[e.RowIndex] == 0))
+                customTypeOfInsulation.Diameters[e.RowIndex] = int.Parse(DiametersGridView[e.ColumnIndex, e.RowIndex].Value.ToString());
 
         }
 
@@ -125,22 +126,30 @@ namespace TypeOfPipeInsulatuion
                 {
                     var selectedType = FormCustomList[checkedIndex];
                     var name = selectedType.RevitType.Name;
+                    var index = checkedIndex.ToString();
                     var typeNode = new XElement("Type");
                     XAttribute typeName = new XAttribute("TypeName", name);
+                    XAttribute typeIndex = new XAttribute("TypeIndex", index);
+                    typeNode.Add(typeIndex);
                     typeNode.Add(typeName);
+                   
                     for (int i = 0; i < selectedType.Diameters.Length; i++)
                     {
+                        
                         var inputedDiameter = selectedType.Diameters[i].ToString();
                         var revitDiameter = selectedType.InstanceGroups.Keys.ToList()[i];
                         if (int.Parse(inputedDiameter) == 0)
                             continue;
                         XElement pairOfElements = new XElement("PairOfDiameters");
+                        var j = i;
                         var input = new XElement("InputedDiameter");
                         input.Add(inputedDiameter);
                         var revit = new XElement("RevitDiameter");
                         revit.Add(revitDiameter);
+                        XAttribute pairIndex = new XAttribute("PairIndex", j.ToString());
                         pairOfElements.Add(input);
                         pairOfElements.Add(revit);
+                        pairOfElements.Add(pairIndex);
                         typeNode.Add(pairOfElements);
                     }
                     allTypes.Add(typeNode);
@@ -152,7 +161,7 @@ namespace TypeOfPipeInsulatuion
 
         private void UpdateGridView(TypeOfInsulation selectedType)
         {
-         
+            DiametersGridView.Rows.Clear();
             foreach (var pair in selectedType.InstanceGroups)
             {                
                  DiametersGridView.Rows.Add(pair.Key, string.Empty);
@@ -175,31 +184,39 @@ namespace TypeOfPipeInsulatuion
                 openFileDialog.Filter = "xml файлы (*.xml)|*.xml|All files (*.*)|*.*";
                 openFileDialog.FilterIndex = 1;
                 openFileDialog.RestoreDirectory = true;
-               
+                
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     filePath = openFileDialog.FileName;
                     DiametersGridView.Rows.Clear();
                     XDocument xDoc = XDocument.Load(filePath); 
                     XElement allTypesNode = xDoc.Element("AllTypes");
-                    int typecounter = -1;
+                    
                     foreach (XElement typeNode in allTypesNode.Descendants("Type"))
                     {
-                        typecounter++;
-                        foreach (XElement pairNode in typeNode.Descendants("PairOfDiameters"))
-                        {                           
-                                int paircounter = -1;
-                                foreach (var pair in FormCustomList[typecounter].InstanceGroups)
-                                {  
-                                    paircounter++;
+                        var currentIndex = int.Parse(typeNode.Attribute("TypeIndex").Value);
+                        if (FormCustomList[currentIndex].RevitType.Name == typeNode.Attribute("TypeName").Value)
+                        {
+                            foreach (XElement pairNode in typeNode.Descendants("PairOfDiameters"))
+                            {
+
+                                foreach (var pair in FormCustomList[currentIndex].InstanceGroups)
+                                {
+                                    var pairIndex = int.Parse(pairNode.Attribute("PairIndex").Value);
                                     if (pair.Key == int.Parse(pairNode.Element("RevitDiameter").Value))
-                                    {                                             
-                                         FormCustomList[typecounter].Diameters[paircounter] = int.Parse(pairNode.Element("InputedDiameter").Value);           
+                                    {
+                                        FormCustomList[currentIndex].Diameters[pairIndex] = int.Parse(pairNode.Element("InputedDiameter").Value);
+
                                     }
-                                    UpdateGridView(FormCustomList[typecounter]);
-                                }                                                         
-                        }      
+
+                                }
+
+                            }
+
+                        }
+                        UpdateGridView(FormCustomList[currentIndex]);
                     }
+                    
                 }
             }
         }
