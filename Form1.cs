@@ -80,8 +80,8 @@ namespace TypeOfPipeInsulatuion
                 return;
             }
 
-            var customTypeOfInsulation = FormCustomList[TypesOfInsulationCheckedListBox.SelectedIndex]; 
-            if((customTypeOfInsulation.Diameters[e.RowIndex] == 0))
+            var customTypeOfInsulation = FormCustomList[TypesOfInsulationCheckedListBox.SelectedIndex];
+            if ((customTypeOfInsulation.Diameters[e.RowIndex] == 0))
                 customTypeOfInsulation.Diameters[e.RowIndex] = int.Parse(DiametersGridView[e.ColumnIndex, e.RowIndex].Value.ToString());
 
         }
@@ -132,10 +132,10 @@ namespace TypeOfPipeInsulatuion
                     XAttribute typeIndex = new XAttribute("TypeIndex", index);
                     typeNode.Add(typeIndex);
                     typeNode.Add(typeName);
-                   
+
                     for (int i = 0; i < selectedType.Diameters.Length; i++)
                     {
-                        
+
                         var inputedDiameter = selectedType.Diameters[i].ToString();
                         var revitDiameter = selectedType.InstanceGroups.Keys.ToList()[i];
                         if (int.Parse(inputedDiameter) == 0)
@@ -163,8 +163,8 @@ namespace TypeOfPipeInsulatuion
         {
             DiametersGridView.Rows.Clear();
             foreach (var pair in selectedType.InstanceGroups)
-            {                
-                 DiametersGridView.Rows.Add(pair.Key, string.Empty);
+            {
+                DiametersGridView.Rows.Add(pair.Key, string.Empty);
             }
 
             for (int i = 0; i < selectedType.Diameters.Length; i++)
@@ -176,49 +176,61 @@ namespace TypeOfPipeInsulatuion
 
         private void button3_Click(object sender, EventArgs e)
         {
-            var filePath = string.Empty;
-
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (TypesOfInsulationCheckedListBox.SelectedIndex >= 0)
             {
-                openFileDialog.InitialDirectory = "c:\\";
-                openFileDialog.Filter = "xml файлы (*.xml)|*.xml|All files (*.*)|*.*";
-                openFileDialog.FilterIndex = 1;
-                openFileDialog.RestoreDirectory = true;
-                
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    filePath = openFileDialog.FileName;
-                    DiametersGridView.Rows.Clear();
-                    XDocument xDoc = XDocument.Load(filePath); 
-                    XElement allTypesNode = xDoc.Element("AllTypes");
-                    
-                    foreach (XElement typeNode in allTypesNode.Descendants("Type"))
-                    {
-                        var currentIndex = int.Parse(typeNode.Attribute("TypeIndex").Value);
-                        if (FormCustomList[currentIndex].RevitType.Name == typeNode.Attribute("TypeName").Value)
-                        {
-                            foreach (XElement pairNode in typeNode.Descendants("PairOfDiameters"))
-                            {
+                var filePath = string.Empty;
 
-                                foreach (var pair in FormCustomList[currentIndex].InstanceGroups)
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                {
+                    openFileDialog.InitialDirectory = "c:\\";
+                    openFileDialog.Filter = "xml файлы (*.xml)|*.xml|All files (*.*)|*.*";
+                    openFileDialog.FilterIndex = 1;
+                    openFileDialog.RestoreDirectory = true;
+
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        filePath = openFileDialog.FileName;
+                        DiametersGridView.Rows.Clear();
+                        XDocument xDoc = XDocument.Load(filePath);
+                        XElement allTypesNode = xDoc.Element("AllTypes");
+
+                        foreach (XElement typeNode in allTypesNode.Descendants("Type"))
+                        {
+                            var currentIndex = int.Parse(typeNode.Attribute("TypeIndex").Value);
+                            if (FormCustomList[currentIndex].RevitType.Name == typeNode.Attribute("TypeName").Value)
+                            {
+                                foreach (XElement pairNode in typeNode.Descendants("PairOfDiameters"))
                                 {
-                                    var pairIndex = int.Parse(pairNode.Attribute("PairIndex").Value);
-                                    if (pair.Key == int.Parse(pairNode.Element("RevitDiameter").Value))
+
+                                    foreach (var pair in FormCustomList[currentIndex].InstanceGroups)
                                     {
-                                        FormCustomList[currentIndex].Diameters[pairIndex] = int.Parse(pairNode.Element("InputedDiameter").Value);
+                                        var pairIndex = int.Parse(pairNode.Attribute("PairIndex").Value);
+                                        if (pair.Key == int.Parse(pairNode.Element("RevitDiameter").Value))
+                                        {
+                                            FormCustomList[currentIndex].Diameters[pairIndex] = int.Parse(pairNode.Element("InputedDiameter").Value);
+
+                                        }
 
                                     }
 
                                 }
 
                             }
-
+                            UpdateGridView(FormCustomList[currentIndex]);
                         }
-                        UpdateGridView(FormCustomList[currentIndex]);
+
                     }
-                    
                 }
             }
+            else
+            {
+                MessageBox.Show("Выберите тип изоляции");
+            }
+        }
+
+        private void button3_MouseHover(object sender, EventArgs e)
+        {
+            toolTip1.SetToolTip(button3, "Для загрузки более одного типа изоляций, выберите тип изоляции с наибольшим количеством экземпляров, для загрузки одного типа изоляций, выберите необходимый" );
         }
     }
 }
